@@ -1,12 +1,18 @@
 import React from 'react';
-import './login.css';
-import { Link } from 'react-router-dom';
+import './home.css'; // Make sure to create this CSS file
 
-const Home = (props) => {
+const Home = () => {
   return (
-    <>
-        <h1>Hello from Home</h1>
-    </>
-)}
+    <nav className="navbar">
+      <div className="navbar-logo">My Website</div>
+      <ul className="navbar-links">
+        <li className="navbar-link">Home</li>
+        <li className="navbar-link">About</li>
+        <li className="navbar-link">Services</li>
+        <li className="navbar-link">Contact</li>
+      </ul>
+    </nav>
+  );
+};
 
 export default Home;
