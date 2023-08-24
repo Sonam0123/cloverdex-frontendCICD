@@ -1,22 +1,25 @@
 import {useState, React} from 'react';
 import './login.css';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 
 const Login = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
 
+
+
 const handleLogin = async () => {
   try {
     const response = await axios.post('http://localhost:3001/api/login', { email, password });
     const token = response.data.token;
-    const username = response.data.username; // Extract the username from the response
+    const username = response.data.username;
     localStorage.setItem('token', token);
-    localStorage.setItem('username', username); // Store the username in localStorage
+    localStorage.setItem('username', username);
     console.log('Login successful');
     setLoginError(false);
+
   } catch (error) {
     console.error('Login failed:', error);
     setLoginError(true);
@@ -48,18 +51,12 @@ const handleLogin = async () => {
           placeholder='Password'
           name='password'
         />
-        {loginError ?(
-          <button className='loginBtn' onClick={(e) => { e.preventDefault(); handleLogin;}}>
-          Log In
-        </button>
-        )
-        :
-        (<Link to='/home'>
+        <Link to='/home'>
           <button className='loginBtn' onClick={handleLogin}>
             Log In
           </button>
-        </Link>) 
-        }
+        </Link>
+      
         <Link to='/sign-up'>
           <button className='newAccountBtn'>Sign Up</button>
         </Link>
