@@ -4,36 +4,26 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const Login = (props) => {
-    const [loginData, setLoginData] = useState({
-        email: '',
-        password: '',
-      });
-    
-      const handleLogin = (e) => {
-        const { name, value } = e.target;
-        setLoginData((prevData) => ({
-          ...prevData,
-          [name]: value,
-        }));
-      };
-    
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState(false);
 
-      const validateLogin = async (e) => {
-        e.preventDefault();
-    
-        try {
-          const response = await api.post('/login', {
-            email: loginData.email,
-            password: loginData.password,
-          });
-    
-          // ... rest of the code ...
-        } catch (error) {
-          console.error('Error logging in:', error);
-        }
-      };
-    
-    
+const handleLogin = async () => {
+  try {
+    const response = await axios.post('http://localhost:3001/api/login', { email, password });
+    const token = response.data.token;
+    const username = response.data.username; // Extract the username from the response
+    localStorage.setItem('token', token);
+    localStorage.setItem('username', username); // Store the username in localStorage
+    console.log('Login successful');
+    setLoginError(false);
+  } catch (error) {
+    console.error('Login failed:', error);
+    setLoginError(true);
+  }
+};
+
+  console.log(loginError)
   return (
     <form className='login'>
       <div className='logoBox' data-aos='fade-up' data-aos-duration='3000'>
@@ -49,22 +39,27 @@ const Login = (props) => {
         data-aos-duration='500'
       >
         <input
-          onChange={(e) => handleLogin(e)}
-          placeholder='Id'
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder='Email'
           name='username'
         />
         <input
-          onChange={(e) => handleLogin(e)}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder='Password'
           name='password'
         />
-
-        <Link to='/home'>
-          <button className='loginBtn' onClick={(e) => validateLogin(e)}>
+        {loginError ?(
+          <button className='loginBtn' onClick={(e) => { e.preventDefault(); handleLogin;}}>
+          Log In
+        </button>
+        )
+        :
+        (<Link to='/home'>
+          <button className='loginBtn' onClick={handleLogin}>
             Log In
           </button>
-        </Link>
-
+        </Link>) 
+        }
         <Link to='/sign-up'>
           <button className='newAccountBtn'>Sign Up</button>
         </Link>
