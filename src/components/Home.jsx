@@ -1,15 +1,15 @@
 import React from 'react';
 import './home.css'; // Make sure to create this CSS file
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
     <nav className="navbar">
-      <div className="navbar-logo">My Website</div>
+      <div className="navbar-logo">PokiDex</div>
       <ul className="navbar-links">
-        <li className="navbar-link">Home</li>
-        <li className="navbar-link">About</li>
-        <li className="navbar-link">Services</li>
-        <li className="navbar-link">Contact</li>
+        <Link to='/sign-up'>
+          <li className="navbar-link">Account</li>
+        </Link>
       </ul>
     </nav>
   );
