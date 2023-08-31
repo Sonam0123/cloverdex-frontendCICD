@@ -2,19 +2,20 @@ import './home.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import ErrorModal from './ErrorModal';
 
 const Home = () => {
   const [userData, setUserData] = useState(null);
   const [logoutError, setLogoutError] = useState(true);
-  const navigate = useNavigate(); // Get the navigate function
+  const navigate = useNavigate();
+  const [showErrorModal, setShowErrorModal] = useState(false); 
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      console.log('Token:', token);
       fetchUserData(token);
     } else {
-      // If there's no token, navigate to login page
       navigate('/');
     }
   }, []);
@@ -31,10 +32,10 @@ const Home = () => {
   
       setUserData(response.data);
   
-      // Redirect to the home page once userData is fetched
       navigate('/home');
     } catch (error) {
       console.error('Error fetching user data:', error);
+      setShowErrorModal(true); 
     }
   };
   
@@ -46,11 +47,9 @@ const Home = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      // Clear the token from local storage
       localStorage.removeItem('token');
       console.log('Logout successful');
       setLogoutError(false);
-      // Refresh the page to reflect the logout state
       window.location.reload();
     } catch (error) {
       console.error('Logout failed:', error);
@@ -59,7 +58,6 @@ const Home = () => {
   };
 
   if (!userData) {
-    // Display a loading message or spinner while data is being fetched
     return <p>Loading...</p>;
   }
 
@@ -68,8 +66,12 @@ const Home = () => {
       <h1>Welcome, {userData.username}!</h1>
       <p>Your element type is {userData.elementType}</p>
       <button onClick={handleLogout}>Logout</button>
+
+      {/* Add the error modal */}
+      <ErrorModal show={showErrorModal} onClose={() => setShowErrorModal(false)} />
     </div>
   );
+
 };
 
 export default Home;
