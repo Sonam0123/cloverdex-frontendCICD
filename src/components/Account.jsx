@@ -9,14 +9,19 @@ const Account = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('')
 
-  const handleAccUpdate = async () => {
+  const handleAccUpdate = async (token, name, email, username) => {
     try {
-      const response = await axios.put('http://localhost:3001/api/user', {name, email, username});
+      const response = await axios.put('http://localhost:3001/api/user', {name, email, username }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log(response.data);
     } catch (error) {
       console.error('Update failed', error);
     }
   };
+  
 
     return(
         <div className="signUpBox">
