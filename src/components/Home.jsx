@@ -1,31 +1,51 @@
-import './login.css';
+import './home.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [userData, setUserData] = useState(null);
+  const [logoutError, setLogoutError] = useState(true);
+  const navigate = useNavigate(); // Get the navigate function
+
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/api/user', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-
-        setUserData(response.data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
-    fetchUserData();
+    const token = localStorage.getItem('token');
+    if (token) {
+      console.log('Token:', token);
+      fetchUserData(token);
+    } else {
+      // If there's no token, navigate to login page
+      navigate('/');
+    }
   }, []);
+
+  const fetchUserData = async (token) => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/user', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      console.log('Fetched user data:', response.data);
+  
+      setUserData(response.data);
+  
+      // Redirect to the home page once userData is fetched
+      navigate('/home');
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+  
 
   const handleLogout = async () => {
     try {
-      // Make a request to logout endpoint on the backend
-      await axios.post('http://localhost:3001/api/logout');
+      await axios.post('http://localhost:3001/api/logout', null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
       // Clear the token from local storage
       localStorage.removeItem('token');
       console.log('Logout successful');
@@ -37,17 +57,17 @@ const Home = () => {
       setLogoutError(true);
     }
   };
-  
+
   if (!userData) {
-    // You can display a loading message or spinner here
+    // Display a loading message or spinner while data is being fetched
     return <p>Loading...</p>;
   }
-  console.log(userData)
 
   return (
     <div>
       <h1>Welcome, {userData.username}!</h1>
       <p>Your element type is {userData.elementType}</p>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };
