@@ -1,30 +1,33 @@
 import {useState, React} from 'react';
 import './login.css';
 import axios from 'axios';
-import { Link} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
+  const navigate = useNavigate(); // Get the navigate function
 
 
-
-const handleLogin = async () => {
-  try {
-    const response = await axios.post('http://localhost:3001/api/login', { email, password });
-    const token = response.data.token;
-    const username = response.data.username;
-    localStorage.setItem('token', token);
-    localStorage.setItem('username', username);
-    console.log('Login successful');
-    setLoginError(false);
-
-  } catch (error) {
-    console.error('Login failed:', error);
-    setLoginError(true);
-  }
-};
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:3001/api/login', { email, password });
+      const token = response.data.token;
+      const username = response.data.username;
+      localStorage.setItem('token', token);
+      localStorage.setItem('username', username);
+      console.log('Login successful');
+      setLoginError(false);
+  
+      // Redirect to the home page after successful login
+      navigate('/home');
+    } catch (error) {
+      console.error('Login failed:', error);
+      setLoginError(true);
+    }
+  };
+  
 
   console.log(loginError)
   return (
