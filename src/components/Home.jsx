@@ -69,14 +69,14 @@ const Home = () => {
       <nav className="navbar">
       <div className="navbar-logo">PokiDex</div>
       <ul className="navbar-links">
-        <Link to='/sign-up'>
+        <Link to='/account'>
           <li className="navbar-link">Account</li>
         </Link>
+        <button onClick={handleLogout}>Logout</button>
       </ul>
       </nav>
       <h1>Welcome, {userData.username}!</h1>
       <p>Your element type is {userData.elementType}</p>
-      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };
