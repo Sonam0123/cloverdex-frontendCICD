@@ -64,7 +64,16 @@ const Home = () => {
   }
 
   return (
+    
     <div>
+      <nav className="navbar">
+      <div className="navbar-logo">PokiDex</div>
+      <ul className="navbar-links">
+        <Link to='/sign-up'>
+          <li className="navbar-link">Account</li>
+        </Link>
+      </ul>
+      </nav>
       <h1>Welcome, {userData.username}!</h1>
       <p>Your element type is {userData.elementType}</p>
       <button onClick={handleLogout}>Logout</button>
