@@ -1,18 +1,22 @@
 import './login.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [userData, setUserData] = useState(null);
+  const [logoutError, setLogoutError] = useState(true);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        const token = localStorage.getItem('token');
+        console.log('Token:', token);
         const response = await axios.get('http://localhost:3001/api/user', {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${token}`,
           },
         });
-
+    
         setUserData(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -24,8 +28,11 @@ const Home = () => {
 
   const handleLogout = async () => {
     try {
-      // Make a request to logout endpoint on the backend
-      await axios.post('http://localhost:3001/api/logout');
+      await axios.post('http://localhost:3001/api/logout', null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
       // Clear the token from local storage
       localStorage.removeItem('token');
       console.log('Logout successful');
@@ -48,6 +55,9 @@ const Home = () => {
     <div>
       <h1>Welcome, {userData.username}!</h1>
       <p>Your element type is {userData.elementType}</p>
+      <Link to='/'>
+        <button onClick={handleLogout}>Logout</button>
+      </Link>
     </div>
   );
 };
