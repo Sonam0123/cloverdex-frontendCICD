@@ -41,7 +41,7 @@ const Home = () => {
     const response = await fetch(
       "https://pokeapi.co/api/v2/type/fire"
     ).then((response) => response.json());
-    console.log(response.pokemon[0].pokemon.name)
+    console.log(response.pokemon[0].pokemon)
     // update the state
     setPokemon(response);
   };
@@ -88,6 +88,11 @@ const Home = () => {
       </nav>
       <h1>Welcome, {userData.username}!</h1>
       <p>Your element type is {userData.elementType}</p>
+      <ul>
+              {pokemon.pokemon.map((poke) => (
+                <li key={poke.pokemon.name}>{poke.pokemon.name}</li>
+              ))}
+            </ul>
     </div>
   );
 };
