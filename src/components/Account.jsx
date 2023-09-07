@@ -5,23 +5,36 @@ import axios from 'axios';
 ;
 
 const Account = () => {
-  const [name, setName] = useState('')
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState('');
 
   const handleAccUpdate = async (token, name, email, username) => {
     try {
-      const response = await axios.put('http://localhost:3001/api/user', {name, email, username }, {
+      // Ensure token is valid and non-empty before making the request
+      if (!token) {
+        console.error('Invalid or missing token');
+        return;
+      }
+
+      const response = await axios.put('http://localhost:3001/api/user', { name, email, username }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
+
+      console.log('Update successful:', response.data);
     } catch (error) {
+      // Log the error details for debugging
       console.error('Update failed', error);
+
+      // Check if the error is related to the JWT
+      if (error.response && error.response.status === 401) {
+        console.error('Unauthorized: JWT token might be invalid or expired');
+        // Handle JWT-related errors gracefully, e.g., redirect to login page
+      }
     }
   };
-  
 
     return(
         <div className="signUpBox">
