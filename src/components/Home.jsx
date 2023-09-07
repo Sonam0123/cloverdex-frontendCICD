@@ -7,7 +7,7 @@ const Home = () => {
   const [userData, setUserData] = useState(null);
   const [logoutError, setLogoutError] = useState(true);
   const navigate = useNavigate(); // Get the navigate function
-
+  const [pokemon, setPokemon] = useState(null);
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -37,7 +37,18 @@ const Home = () => {
       console.error('Error fetching user data:', error);
     }
   };
+  const getPokemon = async () => {
+    const response = await fetch(
+      "https://pokeapi.co/api/v2/type/fire"
+    ).then((response) => response.json());
+    console.log(response.pokemon[0].pokemon.name)
+    // update the state
+    setPokemon(response);
+  };
   
+  useEffect(() => {
+    getPokemon();
+  }, []);
 
   const handleLogout = async () => {
     try {
